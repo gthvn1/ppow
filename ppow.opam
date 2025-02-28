@@ -4,6 +4,8 @@ version: "0.1"
 depends: [
   "dune" {>= "3.17"}
   "dream"
+  "js_of_ocaml"
+  "js_of_ocaml-lwt"
   "odoc" {with-doc}
 ]
 build: [
