@@ -8,6 +8,7 @@ let create_canvas () =
   let canvas = Dom_html.createCanvas doc in
   canvas##.width := 800;
   canvas##.height := 600;
+  canvas##.style##.border := Js.string "1px solid black";
   canvas
 
 let create_title (str : string) =
@@ -20,15 +21,8 @@ let create_usage (str : string) =
   p##.textContent := Js.some (Js.string str);
   p
 
-(* Ball properties *)
-let ball_x = ref 100.
-let ball_y = ref 100.
-let ball_radius = 10.
-let dx = ref 2.
-let dy = ref 2.
-
 let animate ctx canvas =
-  let rec loop _timestamp =
+  let rec loop ball _timestamp =
     (* Clear canvas *)
     ctx##clearRect 0. 0.
       (float_of_int canvas##.width)
@@ -36,29 +30,20 @@ let animate ctx canvas =
 
     (* Draw ball *)
     ctx##beginPath;
-    ctx##arc !ball_x !ball_y ball_radius 0. (2. *. Float.pi) Js._false;
+    ctx##arc (Ball.x ball) (Ball.y ball) (Ball.radius ball) 0. (2. *. Float.pi)
+      Js._false;
     ctx##.fillStyle := Js.string "green";
     ctx##fill;
     ctx##closePath;
 
-    (* Update ball position *)
-    ball_x := !ball_x +. !dx;
-    ball_y := !ball_y +. !dy;
-
-    (* Check for wall collisions *)
-    if
-      !ball_x +. ball_radius > float_of_int canvas##.width
-      || !ball_x -. ball_radius < 0.
-    then dx := -. !dx;
-    if
-      !ball_y +. ball_radius > float_of_int canvas##.height
-      || !ball_y -. ball_radius < 0.
-    then dy := -. !dy;
-
     (* Request next animation frame *)
-    ignore (Dom_html.window##requestAnimationFrame (Js.wrap_callback loop))
+    ignore
+      (Dom_html.window##requestAnimationFrame
+         (Js.wrap_callback @@ loop (Ball.update_position ball)))
   in
-  ignore (Dom_html.window##requestAnimationFrame (Js.wrap_callback loop))
+  ignore
+    (Dom_html.window##requestAnimationFrame
+       (Js.wrap_callback @@ loop (Ball.new_ball canvas##.width canvas##.height)))
 
 let onload _ =
   create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
