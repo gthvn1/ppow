@@ -5,7 +5,12 @@
   </head>
   <body>
     <h1>WebSocket Client</h1>
+
+    <!-- Status of the connection -->
     <p id="status">Connecting...</p>
+
+    <!-- text to send to the server through websocket  -->
+    <input type="text" id="message" placeholder="Enter you message..."/>
     <button onclick="sendMessage()">Send Message</button>
 
     <script>
@@ -24,8 +29,10 @@
       };
 
       function sendMessage() {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send("Hello from client!");
+        let msg = document.getElementById("message");
+        if (ws.readyState === WebSocket.OPEN && msg.value.trim() !== "") {
+          ws.send(msg.value);
+          msg.value = ""; // Clear input after sending
         }
       }
     </script>
