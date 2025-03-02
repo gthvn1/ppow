@@ -3,14 +3,6 @@ open Js_of_ocaml
 
 let doc = Dom_html.document
 
-let create_canvas () =
-  (* Create canvas *)
-  let canvas = Dom_html.createCanvas doc in
-  canvas##.width := 800;
-  canvas##.height := 600;
-  canvas##.style##.border := Js.string "1px solid black";
-  canvas
-
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
   h1##.textContent := Js.some (Js.string str);
@@ -20,6 +12,23 @@ let create_usage (str : string) =
   let p = Dom_html.createP doc in
   p##.textContent := Js.some (Js.string str);
   p
+
+let create_input () =
+  let input = Dom_html.createInput doc ~_type:(Js.string "text") in
+  input##.placeholder := Js.string "Enter a message...";
+  input
+
+let create_button (label : string) =
+  let button = Dom_html.createButton doc in
+  button##.textContent := Js.some (Js.string label);
+  button
+
+let create_canvas () =
+  let canvas = Dom_html.createCanvas doc in
+  canvas##.width := 800;
+  canvas##.height := 600;
+  canvas##.style##.border := Js.string "1px solid black";
+  canvas
 
 let animate ctx canvas =
   let rec loop ball _timestamp =
@@ -47,6 +56,9 @@ let animate ctx canvas =
 
 let onload _ =
   create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
+
+  create_input () |> Dom.appendChild doc##.body;
+  create_button "Send" |> Dom.appendChild doc##.body;
 
   create_usage "Use the arrow keys to move the stick (not yet implemented)"
   |> Dom.appendChild doc##.body;
