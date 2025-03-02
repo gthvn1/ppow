@@ -61,7 +61,7 @@ let animate ctx canvas =
   ignore (Dom_html.window##requestAnimationFrame (Js.wrap_callback loop))
 
 let onload _ =
-  create_title "Hello from OCaml" |> Dom.appendChild doc##.body;
+  create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
 
   create_usage "Use the arrow keys to move the stick (not yet implemented)"
   |> Dom.appendChild doc##.body;

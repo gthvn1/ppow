@@ -1,6 +1,6 @@
-# Ping pong in the browser
+# Ping pong on the Web
 
-- We want to have a ping pong game in the browser.
+- We want to have a ping pong game on the web
 - Backend in OCaml -> Dream?
 - Frontend: HTML5 Canvas + Javascript (js_of_ocaml)?
 - Communication: WebSockets? 
