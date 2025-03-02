@@ -23,6 +23,31 @@ let create_button (label : string) =
   button##.textContent := Js.some (Js.string label);
   button
 
+let create_status () =
+  let p = Dom_html.createP doc in
+  (* Set the ID *)
+  p##.id := Js.string "status";
+  p##.textContent := Js.some (Js.string "Connecting...");
+  p
+
+let setup_websocket () =
+  let ws = new%js WebSockets.webSocket (Js.string "ws://localhost:8080/ws") in
+
+  ws##.onopen :=
+    Dom.handler (fun _ev ->
+        Js.Opt.iter
+          (doc##getElementById (Js.string "status"))
+          (fun status ->
+            status##.textContent := Js.some (Js.string "Connected!"));
+        Js._true);
+
+  ws##.onmessage :=
+    Dom.handler (fun ev ->
+        let msg = Js.to_string (Js.Unsafe.get ev "data") in
+        print_endline @@ "Received from server: " ^ msg;
+        Js._true);
+  ws
+
 let create_canvas () =
   let canvas = Dom_html.createCanvas doc in
   canvas##.width := 800;
@@ -57,8 +82,23 @@ let animate ctx canvas =
 let onload _ =
   create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
 
-  create_input () |> Dom.appendChild doc##.body;
-  create_button "Send" |> Dom.appendChild doc##.body;
+  let input = create_input () in
+  Dom.appendChild doc##.body input;
+
+  let btn = create_button "Send" in
+  Dom.appendChild doc##.body btn;
+
+  create_status () |> Dom.appendChild doc##.body;
+
+  let ws = setup_websocket () in
+
+  btn##.onclick :=
+    Dom_html.handler (fun _ ->
+        let msg = input##.value in
+        if ws##.readyState = WebSockets.OPEN && Js.to_string msg <> "" then (
+          ws##send msg;
+          input##.value := Js.string "");
+        Js._true);
 
   create_usage "Use the arrow keys to move the stick (not yet implemented)"
   |> Dom.appendChild doc##.body;
