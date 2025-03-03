@@ -33,6 +33,7 @@
 # Changelog
 
 - `2025-03-03`:
+    - Remove `websocket_client` because frontend is working now
     - Create `lib/game_types.ml` that describes
       - the state of the game
       - the client message
