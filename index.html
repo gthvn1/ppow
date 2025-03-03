@@ -2,6 +2,70 @@
 <html lang="en">
   <head>
     <title>Ping Pong on the web</title>
+    <style>
+      /* Nord Color Palette */
+      :root {
+          --nord-bg: #2E3440;
+          --nord-light-bg: #3B4252;
+          --nord-text: #D8DEE9;
+          --nord-accent-blue: #5E81AC;
+          --nord-accent-cyan: #88C0D0;
+          --nord-accent-red: #BF616A;
+      }
+
+      body {
+          background-color: var(--nord-bg);
+          color: var(--nord-text);
+          font-family: 'Arial', sans-serif;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          margin: 0;
+      }
+
+      h1 {
+          font-size: 2rem;
+          color: var(--nord-accent-cyan);
+          text-shadow: 0 0 10px var(--nord-accent-cyan);
+          margin-bottom: 10px;
+      }
+
+      p {
+          font-size: 0.8rem;
+          color: var(--nord-text);
+          opacity: 0.8;
+          margin-bottom: 10px;
+      }
+
+      canvas {
+          background-color: var(--nord-light-bg);
+          border-radius: 10px;
+          box-shadow: 0 0 10px var(--nord-accent-cyan),
+                      0 0 20px var(--nord-accent-blue),
+                      0 0 30px var(--nord-accent-red);
+          padding: 10px;
+          margin-bottom: 10px;
+      }
+
+      input {
+          background-color: var(--nord-light-bg);
+          border: 2px solid var(--nord-accent-blue);
+          border-radius: 5px;
+          padding: 10px;
+          color: var(--nord-text);
+          outline: none;
+          font-size: 0.8rem;
+          transition: box-shadow 0.3s ease-in-out;
+      }
+
+      input:focus {
+          box-shadow: 0 0 10px var(--nord-accent-cyan);
+          border-color: var(--nord-accent-cyan);
+      }
+    </style>
     <script src="_build/default/frontend/client.bc.js"></script>
   </head>
   <body>
