@@ -1,12 +1,13 @@
 open Sexplib.Std
 
-module Ball = struct
-  type t = { x : float; y : float; radius : float; dx : float; dy : float }
-  [@@deriving sexp]
-end
+type ball = { x : float; y : float; radius : float; dx : float; dy : float }
+[@@deriving sexp]
 
-type state = { width : int; height : int; ball : Ball.t } [@@deriving sexp]
-type server_message = Init_ack of state | Move_ack of state [@@deriving sexp]
+type state = { width : int; height : int; ball : ball } [@@deriving sexp]
+
+type server_message = Init_ack of (int * int) | Move_ack | Update of state
+[@@deriving sexp]
+
 type direction = Up | Down | Left | Right [@@deriving sexp]
 type client_message = Init | Move of direction [@@deriving sexp]
 

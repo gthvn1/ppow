@@ -1,7 +1,9 @@
 (* client.ml *)
 open Js_of_ocaml
+module G = Game_types
 
 let doc = Dom_html.document
+let ball : G.ball ref = ref { G.x = 0.; y = 0.; radius = 0.; dx = 0.; dy = 0. }
 
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
@@ -46,7 +48,7 @@ let animate ctx canvas =
 
     (* Draw ball *)
     ctx##beginPath;
-    ctx##arc 10. 20. 5. 0. (2. *. Float.pi) Js._false;
+    ctx##arc !ball.x !ball.y !ball.radius 0. (2. *. Float.pi) Js._false;
     ctx##.fillStyle := Js.string "green";
     ctx##fill;
     ctx##closePath;
@@ -79,7 +81,7 @@ let setup_websocket () =
 
         (* Send "init" message only when the WebSocket is open *)
         let init_msg =
-          Sexplib.Sexp.to_string @@ Game_types.(sexp_of_client_message Init)
+          Sexplib.Sexp.to_string @@ G.(sexp_of_client_message Init)
         in
         ws##send (Js.string init_msg);
 
@@ -88,20 +90,21 @@ let setup_websocket () =
   ws##.onmessage :=
     Dom.handler (fun ev ->
         let msg = Js.to_string ev##.data in
-        print_endline @@ "Received from server: " ^ msg;
+        (*print_endline @@ "Received from server: " ^ msg;*)
         let server_msg = Sexplib.Sexp.of_string msg in
-        match Game_types.server_message_of_sexp server_msg with
-        | Init_ack state ->
+        match G.server_message_of_sexp server_msg with
+        | Init_ack (width, height) ->
             Firebug.console##log
-              (Printf.sprintf "Received init ack: %d %d" state.width
-                 state.height);
+              (Printf.sprintf "Received init ack: %d %d" width height);
             (* Now create the canvas and start the game *)
-            start_game state.width state.height;
+            start_game width height;
             Js._true
-        | Move_ack state ->
-            Firebug.console##log
-              (Printf.sprintf "Received move ack: %d %d" state.width
-                 state.height);
+        | Move_ack ->
+            Firebug.console##log "Received move ack";
+            Js._true
+        | Update state ->
+            ball := state.G.ball;
+            Firebug.console##log "Received state update";
             Js._true);
   ws
 
@@ -121,17 +124,17 @@ let onload _ =
   btn##.onclick :=
     Dom_html.handler (fun _ ->
         let msg = Js.to_string input##.value in
-        match Game_types.direction_of_string msg with
+        match G.direction_of_string msg with
         | None ->
             Firebug.console##log
               (Printf.sprintf "%s is not a valid direction" msg);
             Js._true
         | Some d ->
             (if ws##.readyState = WebSockets.OPEN then
-               let m = Game_types.Move d in
+               let m = G.Move d in
 
                let move_msg =
-                 Sexplib.Sexp.to_string @@ Game_types.(sexp_of_client_message m)
+                 Sexplib.Sexp.to_string @@ G.(sexp_of_client_message m)
                in
                ws##send (Js.string move_msg));
             Js._true);

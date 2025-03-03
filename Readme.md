@@ -26,7 +26,7 @@
 - [x] start playing with js_of_ocaml
 - [x] simple rendering (a ball)
 - [x] understand websockets
-- [ ] simple communication between backend/frontend to move the ball
+- [x] simple communication between backend/frontend to move the ball
 - [ ] move the ball alone and interact with a stick
 - [ ] implement ping pong
 
@@ -44,7 +44,7 @@
         - ack to move
       - Init of canvas is done
       - Messages are exchanged
-      - Still need to move the ball (next step...)
+      - Ball is moving... next is interaction
 ```sh
 ❯ dune build && ./_build/default/backend/server.exe
 03.03.25 19:46:48.853                       Running at http://localhost:8080
