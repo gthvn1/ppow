@@ -92,12 +92,16 @@ let setup_websocket () =
         let server_msg = Sexplib.Sexp.of_string msg in
         match Game_types.server_message_of_sexp server_msg with
         | Init_ack state ->
-            Printf.printf "Received init ack: %d %d\n" state.width state.height;
+            Firebug.console##log
+              (Printf.sprintf "Received init ack: %d %d" state.width
+                 state.height);
             (* Now create the canvas and start the game *)
             start_game state.width state.height;
             Js._true
         | Move_ack state ->
-            Printf.printf "Received move ack: %d %d\n" state.width state.height;
+            Firebug.console##log
+              (Printf.sprintf "Received move ack: %d %d" state.width
+                 state.height);
             Js._true);
   ws
 
@@ -119,7 +123,7 @@ let onload _ =
         let msg = Js.to_string input##.value in
         match Game_types.direction_of_string msg with
         | None ->
-            Printf.printf "wrong direction";
+            Firebug.console##log "wrong direction";
             Js._true
         | Some d ->
             (if ws##.readyState = WebSockets.OPEN then
