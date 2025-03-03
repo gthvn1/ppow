@@ -3,4 +3,4 @@
  (modes js)
  (preprocess
   (pps js_of_ocaml-ppx))
- (libraries js_of_ocaml js_of_ocaml-lwt js_of_ocaml-lwt.graphics))
+ (libraries game_types js_of_ocaml js_of_ocaml-lwt js_of_ocaml-lwt.graphics))

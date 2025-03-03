@@ -32,9 +32,34 @@
 
 # Changelog
 
-- Can now test that a message can be exchange between client/server:
-  - start the server: `./_build/default/backend/server.exe`
-  - load the client into browser, click **Send Message**
+- `2025-03-03`:
+    - Create `lib/game_types.ml` that describes
+      - the state of the game
+      - the client message
+        - init to get the canvas size and the ball position
+        - move to direction
+      - the server message
+        - ack to init
+        - ack to move
+      - Init of canvas is done
+      - Messages are exchanged
+      - Still need to move the ball (next step...)
+```sh
+❯ dune build && ./_build/default/backend/server.exe
+03.03.25 19:46:48.853                       Running at http://localhost:8080
+03.03.25 19:46:48.853                       Type Ctrl+C to stop
+03.03.25 19:46:52.173    dream.logger  INFO REQ 1 GET /ws ::1:39938 fd 6 Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0
+03.03.25 19:46:52.173                       REQ 1 Client connected!
+03.03.25 19:46:52.173    dream.logger  INFO REQ 1 101 in 79 μs
+03.03.25 19:46:52.185                       REQ 1 Received: Init
+03.03.25 19:46:57.243                       REQ 1 Received: (Move Up)
+03.03.25 19:47:01.971                       REQ 1 Received: (Move Left)
+```
+
+- `2025-03-02`:
+    - Can now test that a message can be exchange between client/server:
+      - start the server: `./_build/default/backend/server.exe`
+      - load the client into browser, click **Send Message**
 ```sh
 ❯ ./_build/default/backend/server.exe
 02.03.25 14:58:31.674                       Running at http://localhost:8080
@@ -45,11 +70,13 @@
 02.03.25 14:58:39.897                       REQ 1 Received: Hello from client!
 02.03.25 14:58:43.135                       REQ 1 Received: Hello from client!
 ```
-- Create a simple client to test the server: `wbesocket_client/client.html`
-- Server.ml accept websocket
-  - build with `dune build`
-  - run: `./_build/default/backend/server.exe`
-- Modifying hello.ml into server.ml
-- [Dream](https://aantron.github.io/dream/)
-  - [hello](https://aantron.github.io/dream/)
-- `dune build && ./_build/default/backend/hello.exe`
+
+- `2025-03-01`:
+    - Create a simple client to test the server: `wbesocket_client/client.html`
+    - Server.ml accept websocket
+      - build with `dune build`
+      - run: `./_build/default/backend/server.exe`
+    - Modifying hello.ml into server.ml
+    - [Dream](https://aantron.github.io/dream/)
+      - [hello](https://aantron.github.io/dream/)
+    - `dune build && ./_build/default/backend/hello.exe`

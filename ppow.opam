@@ -6,6 +6,7 @@ depends: [
   "dream"
   "js_of_ocaml"
   "js_of_ocaml-lwt"
+  "sexplib"
   "odoc" {with-doc}
 ]
 build: [
