@@ -11,7 +11,7 @@ let websocket_handler websocket =
         Lwt.return_unit
     | Some msg ->
         Dream.log "Received: %s" msg;
-        Dream.send websocket msg >>= echo_loop
+        Dream.send websocket (String.uppercase_ascii msg) >>= echo_loop
   in
   echo_loop ()
 
