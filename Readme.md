@@ -1,9 +1,9 @@
 # Ping pong on the Web
 
 - We want to have a ping pong game on the web
-- Backend in OCaml -> Dream?
-- Frontend: HTML5 Canvas + Javascript (js_of_ocaml)?
-- Communication: WebSockets? 
+- Backend in OCaml -> [Dream](https://aantron.github.io/dream/)
+- Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
+- Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
 - The frontend listens for keyboard/mouse events, sends actions to the backend
 - It receives game state updates from the backend and renders them.
