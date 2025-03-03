@@ -15,7 +15,7 @@ let create_usage (str : string) =
 
 let create_input () =
   let input = Dom_html.createInput doc ~_type:(Js.string "text") in
-  input##.placeholder := Js.string "Enter a direction: up, down, left, right";
+  input##.placeholder := Js.string "Enter up, down, left or right";
   input
 
 let create_button (label : string) =
@@ -123,7 +123,8 @@ let onload _ =
         let msg = Js.to_string input##.value in
         match Game_types.direction_of_string msg with
         | None ->
-            Firebug.console##log "wrong direction";
+            Firebug.console##log
+              (Printf.sprintf "%s is not a valid direction" msg);
             Js._true
         | Some d ->
             (if ws##.readyState = WebSockets.OPEN then
