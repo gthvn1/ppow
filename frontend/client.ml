@@ -49,8 +49,11 @@ let animate ctx canvas =
     (* Draw ball *)
     ctx##beginPath;
     ctx##arc !ball.x !ball.y !ball.radius 0. (2. *. Float.pi) Js._false;
-    ctx##.fillStyle := Js.string "green";
+    ctx##.fillStyle := Js.string "white";
     ctx##fill;
+    ctx##.lineWidth := Js.float 4.;
+    ctx##.strokeStyle := Js.string "black";
+    ctx##stroke;
     ctx##closePath;
 
     (* Request next animation frame *)

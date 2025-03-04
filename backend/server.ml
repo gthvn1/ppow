@@ -10,24 +10,23 @@ let update_state (state : G.state) =
   let b = state.ball in
   let new_x = b.x +. b.dx in
   let new_y = b.y +. b.dy in
-  let new_x =
-    if new_x < 0. then 0.
-    else if new_x > float state.width then float state.width
-    else new_x
+  let x, dx =
+    if new_x -. b.radius < 0. then (b.radius, -.b.dx)
+    else if new_x +. b.radius > float state.width then
+      (float state.width -. b.radius, -.b.dx)
+    else (new_x, b.dx)
   in
-  let new_y =
-    if new_y < 0. then 0.
-    else if new_y > float state.height then float state.height
-    else new_y
+  let y, dy =
+    if new_y -. b.radius < 0. then (b.radius, -.b.dy)
+    else if new_y +. b.radius > float state.height then
+      (float state.height -. b.radius, -.b.dy)
+    else (new_y, b.dy)
   in
-  {
-    state with
-    ball = { x = new_x; y = new_y; radius = b.radius; dx = b.dx; dy = b.dy };
-  }
+  { state with ball = { x; y; radius = b.radius; dx; dy } }
 
 let rec game_loop (state : G.state) =
-  let fps = 2. in
-  (* 2 frames per second *)
+  let fps = 60. in
+  (* frames per second *)
   Lwt_unix.sleep (1. /. fps) >>= fun () ->
   let new_state = update_state state in
   let sexp = G.sexp_of_server_message (Update new_state) in
