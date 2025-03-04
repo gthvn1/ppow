@@ -4,18 +4,22 @@ module E = Engine
 
 (* list of connected clients *)
 let clients = ref []
-let board_width = ref 400
-let board_height = ref 300
 
-let rec game_loop (state : G.state) =
+(* The state is updated in different threads so we need a shared game
+state *)
+let game_state = Lwt_mvar.create_empty ()
+
+let rec game_loop () =
   let fps = 60. in
   (* frames per second *)
   Lwt_unix.sleep (1. /. fps) >>= fun () ->
+  Lwt_mvar.take game_state >>= fun state ->
   let new_state = E.update_state state in
+  Lwt_mvar.put game_state new_state >>= fun () ->
   let sexp = G.sexp_of_server_message (Update new_state) in
   let resp = Sexplib.Sexp.to_string sexp in
   Lwt_list.iter_p (fun websocket -> Dream.send websocket resp) !clients
-  >>= fun () -> game_loop new_state
+  >>= fun () -> game_loop ()
 
 (* Websocket handler *)
 let websocket_handler websocket =
@@ -33,9 +37,11 @@ let websocket_handler websocket =
         let client_msg = Sexplib.Sexp.of_string msg in
         match G.client_message_of_sexp client_msg with
         | G.Init ->
-            let sexp =
-              G.sexp_of_server_message (Init_ack (!board_width, !board_height))
-            in
+            Lwt_mvar.take game_state >>= fun state ->
+            let width = state.width in
+            let height = state.height in
+            Lwt_mvar.put game_state state >>= fun () ->
+            let sexp = G.sexp_of_server_message (Init_ack (width, height)) in
             let resp = Sexplib.Sexp.to_string sexp in
             Dream.send websocket resp >>= loop
         | G.Move _ ->
@@ -46,16 +52,16 @@ let websocket_handler websocket =
   loop ()
 
 let () =
-  let state : G.state =
+  let init_state : G.state =
     {
-      ball : G.ball = { x = 100.; y = 100.; radius = 10.; dx = 2.; dy = 2. };
-      stick1 : G.stick = { G.x = 30.; y = 40.; width = 2.; height = 40. };
-      width = !board_width;
-      height = !board_height;
+      G.width = 400;
+      G.height = 300;
+      G.ball = { x = 100.; y = 100.; radius = 10.; dx = 2.; dy = 2. };
+      G.stick1 = { x = 30.; y = 40.; width = 2.; height = 40. };
     }
   in
-
-  Lwt.async (fun () -> game_loop state);
+  Lwt_mvar.put game_state init_state |> ignore;
+  Lwt.async (fun () -> game_loop ());
   Dream.run @@ Dream.logger
   @@ Dream.router
        [
