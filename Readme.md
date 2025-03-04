@@ -3,6 +3,7 @@
 - We want to have a ping pong game on the web
 - Backend in OCaml -> [Dream](https://aantron.github.io/dream/)
 - Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
+  - Here are [some examples](https://github.com/ocsigen/js_of_ocaml/blob/master/examples)
 - Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
 - The frontend listens for keyboard/mouse events, sends actions to the backend
@@ -31,6 +32,9 @@
 - [ ] implement ping pong
 
 # Changelog
+
+- `2025-03-04`:
+    - Use another CSS and group input and button in a div
 
 - `2025-03-03`:
     - Remove `websocket_client` because frontend is working now

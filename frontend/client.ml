@@ -17,7 +17,7 @@ let create_usage (str : string) =
 
 let create_input () =
   let input = Dom_html.createInput doc ~_type:(Js.string "text") in
-  input##.placeholder := Js.string "Enter up, down, left or right";
+  input##.placeholder := Js.string "up, down, left or right";
   input
 
 let create_button (label : string) =
@@ -111,11 +111,13 @@ let setup_websocket () =
 let onload _ =
   create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
 
+  let div = Dom_html.createDiv doc in
   let input = create_input () in
-  Dom.appendChild doc##.body input;
-
   let btn = create_button "Send" in
-  Dom.appendChild doc##.body btn;
+
+  Dom.appendChild div input;
+  Dom.appendChild div btn;
+  Dom.appendChild doc##.body div;
 
   create_status () |> Dom.appendChild doc##.body;
 

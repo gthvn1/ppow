@@ -1,73 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Ping Pong on the web</title>
     <style>
-      /* Nord Color Palette */
-      :root {
-          --nord-bg: #2E3440;
-          --nord-light-bg: #3B4252;
-          --nord-text: #D8DEE9;
-          --nord-accent-blue: #5E81AC;
-          --nord-accent-cyan: #88C0D0;
-          --nord-accent-red: #BF616A;
-      }
+        @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
 
-      body {
-          background-color: var(--nord-bg);
-          color: var(--nord-text);
-          font-family: 'Arial', sans-serif;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          margin: 0;
-      }
+        :root {
+            --basquiat-bg: #ffffff;
+            /* White background */
+            --basquiat-black: #000000;
+            --basquiat-red: #E63946;
+            --basquiat-yellow: #F4A261;
+            --basquiat-green: #2A9D8F;
+            --basquiat-texture: repeating-linear-gradient(45deg,
+                    rgba(0, 0, 0, 0.08) 0px,
+                    rgba(0, 0, 0, 0.08) 10px,
+                    transparent 10px,
+                    transparent 20px);
+        }
 
-      h1 {
-          font-size: 2rem;
-          color: var(--nord-accent-cyan);
-          text-shadow: 0 0 10px var(--nord-accent-cyan);
-          margin-bottom: 10px;
-      }
+        body {
+            background-color: var(--basquiat-bg);
+            background-image: var(--basquiat-texture);
+            font-family: 'Rock Salt', cursive;
+            color: var(--basquiat-black);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
 
-      p {
-          font-size: 0.8rem;
-          color: var(--nord-text);
-          opacity: 0.8;
-          margin-bottom: 10px;
-      }
+        h1 {
+            font-size: 1.8rem;
+            color: var(--basquiat-red);
+            text-shadow: -1px -1px 0 var(--basquiat-black), 1px 1px 0 var(--basquiat-yellow);
+            border-bottom: 3px solid var(--basquiat-black);
+            display: inline-block;
+            padding: 3px 8px;
+            transform: rotate(-2deg);
+        }
 
-      canvas {
-          background-color: var(--nord-light-bg);
-          border-radius: 10px;
-          box-shadow: 0 0 10px var(--nord-accent-cyan),
-                      0 0 20px var(--nord-accent-blue),
-                      0 0 30px var(--nord-accent-red);
-          padding: 10px;
-          margin-bottom: 10px;
-      }
+        p {
+            font-size: 0.8rem;
+            color: var(--basquiat-black);
+            background: var(--basquiat-yellow);
+            padding: 4px;
+            display: inline-block;
+            border: 2px solid var(--basquiat-black);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-      input {
-          background-color: var(--nord-light-bg);
-          border: 2px solid var(--nord-accent-blue);
-          border-radius: 5px;
-          padding: 10px;
-          color: var(--nord-text);
-          outline: none;
-          font-size: 0.8rem;
-          transition: box-shadow 0.3s ease-in-out;
-      }
+        canvas {
+            background-color: var(--basquiat-bg);
+            border: 3px solid var(--basquiat-black);
+            padding: 10px;
+            box-shadow:
+                -4px -4px 0 var(--basquiat-red),
+                4px 4px 0 var(--basquiat-green);
+            transform: rotate(2deg);
+        }
 
-      input:focus {
-          box-shadow: 0 0 10px var(--nord-accent-cyan);
-          border-color: var(--nord-accent-cyan);
-      }
+        input {
+            background-color: var(--basquiat-yellow);
+            border: 2px solid var(--basquiat-black);
+            padding: 6px;
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.8rem;
+            color: var(--basquiat-black);
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        input:focus {
+            border-color: var(--basquiat-red);
+            box-shadow: 0 0 8px var(--basquiat-red);
+        }
+
+        /* Cool Sketchy Button */
+        button {
+            background-color: var(--basquiat-black);
+            color: var(--basquiat-yellow);
+            font-family: 'Rock Salt', cursive;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            border: 3px solid var(--basquiat-red);
+            padding: 8px 14px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s ease-in-out;
+            text-shadow: -1px -1px 0 var(--basquiat-yellow);
+            box-shadow: -3px -3px 0 var(--basquiat-green), 3px 3px 0 var(--basquiat-red);
+        }
+
+        button:hover {
+            background-color: var(--basquiat-yellow);
+            color: var(--basquiat-black);
+            border-color: var(--basquiat-black);
+            transform: rotate(-2deg) scale(1.05);
+        }
     </style>
     <script src="_build/default/frontend/client.bc.js"></script>
-  </head>
-  <body>
-  </body>
+</head>
+
+<body>
+</body>
+
 </html>
