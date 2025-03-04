@@ -4,6 +4,7 @@ module G = Game_types
 
 let doc = Dom_html.document
 let ball : G.ball ref = ref { G.x = 0.; y = 0.; radius = 0.; dx = 0.; dy = 0. }
+let stick : G.stick ref = ref { G.x = 0.; y = 0.; width = 0.; height = 0. }
 
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
@@ -46,13 +47,16 @@ let animate ctx canvas =
       (float_of_int canvas##.width)
       (float_of_int canvas##.height);
 
-    (* Draw ball *)
     ctx##beginPath;
+    (* Draw ball *)
     ctx##arc !ball.x !ball.y !ball.radius 0. (2. *. Float.pi) Js._false;
     ctx##.fillStyle := Js.string "white";
     ctx##fill;
     ctx##.lineWidth := Js.float 4.;
     ctx##.strokeStyle := Js.string "black";
+    ctx##stroke;
+    (* Draw stick *)
+    ctx##rect !stick.x !stick.y !stick.width !stick.height;
     ctx##stroke;
     ctx##closePath;
 
@@ -107,6 +111,7 @@ let setup_websocket () =
             Js._true
         | Update state ->
             ball := state.G.ball;
+            stick := state.G.stick1;
             Firebug.console##log "Received state update";
             Js._true);
   ws

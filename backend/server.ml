@@ -66,6 +66,7 @@ let () =
   let state : G.state =
     {
       ball : G.ball = { x = 100.; y = 100.; radius = 10.; dx = 2.; dy = 2. };
+      stick1 : G.stick = { G.x = 30.; y = 40.; width = 2.; height = 40. };
       width = !board_width;
       height = !board_height;
     }

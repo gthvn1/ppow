@@ -35,6 +35,8 @@
 
 - `2025-03-04`:
     - Use another CSS and group input and button in a div
+    - Fix an issue when hitting walls with the ball
+    - Add the first stick
 
 - `2025-03-03`:
     - Remove `websocket_client` because frontend is working now
