@@ -18,9 +18,13 @@ let update_state (state : G.state) =
   in
   { state with ball = { x; y; radius = b.radius; dx; dy } }
 
-let move_stick (state : G.state) (direction : G.direction) =
-  match direction with
-  | Up -> state
-  | Down -> state
-  | Left -> state
-  | Right -> state
+let move_stick (state : G.state) (direction : G.direction) : G.state =
+  let s = state.stick1 in
+  let new_stick : G.stick =
+    match direction with
+    | Up -> { s with y = s.y -. 10. }
+    | Down -> { s with y = s.y +. 10. }
+    | Left -> { s with x = s.x -. 10. }
+    | Right -> { s with x = s.x +. 10. }
+  in
+  { state with stick1 = new_stick }

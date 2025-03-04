@@ -28,7 +28,11 @@
 - [x] simple rendering (a ball)
 - [x] understand websockets
 - [x] simple communication between backend/frontend to move the ball
-- [ ] move the ball alone and interact with a stick
+- [x] move the ball alone
+- [ ] move one stick using message
+- [ ] add interaction between stick and ball
+- [ ] move the ball using the keyboard
+- [ ] add another stick
 - [ ] implement ping pong
 
 # Changelog
@@ -37,6 +41,8 @@
     - Use another CSS and group input and button in a div
     - Fix an issue when hitting walls with the ball
     - Add the first stick
+    - Move the stick by sending message
+      - TODO: it moves but we need to manage boundaries
 
 - `2025-03-03`:
     - Remove `websocket_client` because frontend is working now
