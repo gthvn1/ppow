@@ -1,34 +1,17 @@
 open Lwt.Infix
 module G = Game_types
+module E = Engine
 
 (* list of connected clients *)
 let clients = ref []
 let board_width = ref 400
 let board_height = ref 300
 
-let update_state (state : G.state) =
-  let b = state.ball in
-  let new_x = b.x +. b.dx in
-  let new_y = b.y +. b.dy in
-  let x, dx =
-    if new_x -. b.radius < 0. then (b.radius, -.b.dx)
-    else if new_x +. b.radius > float state.width then
-      (float state.width -. b.radius, -.b.dx)
-    else (new_x, b.dx)
-  in
-  let y, dy =
-    if new_y -. b.radius < 0. then (b.radius, -.b.dy)
-    else if new_y +. b.radius > float state.height then
-      (float state.height -. b.radius, -.b.dy)
-    else (new_y, b.dy)
-  in
-  { state with ball = { x; y; radius = b.radius; dx; dy } }
-
 let rec game_loop (state : G.state) =
   let fps = 60. in
   (* frames per second *)
   Lwt_unix.sleep (1. /. fps) >>= fun () ->
-  let new_state = update_state state in
+  let new_state = E.update_state state in
   let sexp = G.sexp_of_server_message (Update new_state) in
   let resp = Sexplib.Sexp.to_string sexp in
   Lwt_list.iter_p (fun websocket -> Dream.send websocket resp) !clients
