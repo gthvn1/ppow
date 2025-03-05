@@ -5,15 +5,10 @@
 - Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
   - Here are [some examples](https://github.com/ocsigen/js_of_ocaml/blob/master/examples)
 - Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
-
 - The frontend listens for keyboard/mouse events, sends actions to the backend
 - It receives game state updates from the backend and renders them.
-
-- WebSocket Messages examples:
-  - Client to server:
-    - `{ "action": "move", "direction": "left" }`
-  - Server to client:
-    - `{ "ball": { "x": 100, "y": 150 }, "stick1": { "y": 120 }, "stick2": { "y": 200 } }`
+- For the websocket message we will use S-expression. As backend and frontend are written
+in OCaml it looks an easy way to serialize OCaml value:
 
 # Architecture
 
@@ -31,7 +26,6 @@
 - [x] move the ball alone
 - [x] move one stick
 - [ ] add interaction between stick and ball
-- [ ] move the ball using the keyboard
 - [ ] add another stick
 - [ ] implement ping pong
 
