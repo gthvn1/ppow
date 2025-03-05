@@ -10,7 +10,7 @@
 - The frontend listens for keyboard/mouse events, sends actions to the backend
 - It receives game state updates from the backend and renders them.
 - For the websocket message we will use S-expression. As backend and frontend are written
-in OCaml it looks an easy way to serialize OCaml value:
+in OCaml it looks an easy way to serialize OCaml values.
 
 # Architecture
 
