@@ -1,6 +1,6 @@
 # Ping pong on the Web
 
-<img align="right" src="images/ocaml_ping_pong.webp" alt="OCaml plays ping pong" width="200" height="200" />
+<img align="right" src="images/ocaml_ping_pong.jpeg" alt="OCaml plays ping pong" width="200" height="200" />
 
 - We want to have a ping pong game on the web
 - Backend in OCaml -> [Dream](https://aantron.github.io/dream/)
