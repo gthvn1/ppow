@@ -29,7 +29,7 @@
 - [x] understand websockets
 - [x] simple communication between backend/frontend to move the ball
 - [x] move the ball alone
-- [ ] move one stick using message
+- [x] move one stick
 - [ ] add interaction between stick and ball
 - [ ] move the ball using the keyboard
 - [ ] add another stick
@@ -37,12 +37,14 @@
 
 # Changelog
 
-- `2025-03-04`:
+- `2025-03-05`:
     - Use another CSS and group input and button in a div
     - Fix an issue when hitting walls with the ball
     - Add the first stick
     - Move the stick by sending message
-      - TODO: it moves but we need to manage boundaries
+    - Move the stick using arrow keys
+      - TODO: it moves but we need to manage boundaries and collision
+
 
 - `2025-03-03`:
     - Remove `websocket_client` because frontend is working now

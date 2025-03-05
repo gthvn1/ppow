@@ -119,18 +119,54 @@ let setup_websocket () =
 let onload _ =
   create_title "PPoW: Ping Pong on the Web" |> Dom.appendChild doc##.body;
 
-  let div = Dom_html.createDiv doc in
   let input = create_input () in
   let btn = create_button "Send" in
-
-  Dom.appendChild div input;
-  Dom.appendChild div btn;
-  Dom.appendChild doc##.body div;
-
-  create_status () |> Dom.appendChild doc##.body;
-
+  let usage =
+    create_usage "Use arrow keys to move the stick, or use the text input"
+  in
+  let status = create_status () in
   let ws = setup_websocket () in
 
+  (* Create a DIV to group the input and the button *)
+  let div = Dom_html.createDiv doc in
+  Dom.appendChild div input;
+  Dom.appendChild div btn;
+
+  Dom.appendChild doc##.body usage;
+  Dom.appendChild doc##.body div;
+  Dom.appendChild doc##.body status;
+
+  (* Setup handler when key is pressed. We want to manage up, down, left and right *)
+  let handle_key_event ev =
+    let dir =
+      match ev##.keyCode with
+      | 37 -> Some G.Left
+      | 38 -> Some G.Up
+      | 39 -> Some G.Right
+      | 40 -> Some G.Down
+      | _ -> None
+    in
+    if Option.is_some dir then (
+      Firebug.console##log "Got some direction";
+      let m = G.Move (Option.get dir) in
+      let move_msg = Sexplib.Sexp.to_string @@ G.(sexp_of_client_message m) in
+      ws##send (Js.string move_msg))
+    else Firebug.console##log (Js.string "key not managed");
+    Js._true
+  in
+  let ignored_keycode = ref (-1) in
+  Dom_html.(
+    document##.onkeydown :=
+      handler (fun e ->
+          ignored_keycode := e##.keyCode;
+          handle_key_event e);
+    document##.onkeypress :=
+      handler (fun e ->
+          let k = !ignored_keycode in
+          ignored_keycode := -1;
+          if e##.keyCode = k then Js._true else handle_key_event e));
+
+  (* Setup the handler when Send button is pressed *)
   btn##.onclick :=
     Dom_html.handler (fun _ ->
         let msg = Js.to_string input##.value in
@@ -148,9 +184,6 @@ let onload _ =
                in
                ws##send (Js.string move_msg));
             Js._true);
-
-  create_usage "Use the arrow keys to move the stick (not yet implemented)"
-  |> Dom.appendChild doc##.body;
 
   Js._true
 
