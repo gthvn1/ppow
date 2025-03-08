@@ -110,31 +110,17 @@ let update_state (state : G.state) =
 
 let move_stick (state : G.state) (direction : G.direction) : G.state =
   let s = state.stick1 in
+  (* Helper function to constraint the deplacement of the stick *)
+  let clamp min_val max_val v =
+    if v < min_val then min_val else if v > max_val then max_val else v
+  in
+  let max_height = float state.height -. s.height in
+  let max_width = float state.width -. s.width in
   let new_stick : G.stick =
     match direction with
-    | Up ->
-        let new_y = s.y -. 10. in
-        { s with y = (if new_y < 0. then 0. else new_y) }
-    | Down ->
-        let new_y = s.y +. 10. in
-        {
-          s with
-          y =
-            (if new_y +. s.height > float state.height then
-               float state.height -. s.height
-             else new_y);
-        }
-    | Left ->
-        let new_x = s.x -. 10. in
-        { s with x = (if new_x < 0. then 0. else new_x) }
-    | Right ->
-        let new_x = s.x +. 10. in
-        {
-          s with
-          x =
-            (if new_x +. s.width > float state.width then
-               float state.width -. s.width
-             else new_x);
-        }
+    | Up -> { s with y = clamp 0. max_height (s.y -. 10.) }
+    | Down -> { s with y = clamp 0. max_height (s.y +. 10.) }
+    | Left -> { s with x = clamp 0. max_width (s.x -. 10.) }
+    | Right -> { s with x = clamp 0. max_width (s.x +. 10.) }
   in
   { state with stick1 = new_stick }
