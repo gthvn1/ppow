@@ -1,6 +1,6 @@
 # Ping pong on the Web
 
-<img align="right" src="images/ocaml_ping_pong.jpeg" alt="OCaml plays ping pong" width="100" height="100" />
+<img align="right" src="images/screenshot.png" alt="OCaml plays ping pong" height="300" />
 
 - We want to have a ping pong game on the web
 - Backend in OCaml -> [Dream](https://aantron.github.io/dream/)
@@ -27,11 +27,14 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] simple communication between backend/frontend to move the ball
 - [x] move the ball alone
 - [x] move one stick
-- [ ] add interaction between stick and ball
+- [x] add interaction between stick and ball
 - [ ] add another stick
 - [ ] implement ping pong
 
 # Changelog
+
+- `2025-03-08`:
+    - Detect hits with boundaries and stick
 
 - `2025-03-05`:
     - Use another CSS and group input and button in a div
@@ -40,7 +43,6 @@ in OCaml it looks an easy way to serialize OCaml values.
     - Move the stick by sending message
     - Move the stick using arrow keys
       - TODO: it moves but we need to manage boundaries and collision
-
 
 - `2025-03-03`:
     - Remove `websocket_client` because frontend is working now
@@ -66,7 +68,6 @@ in OCaml it looks an easy way to serialize OCaml values.
 03.03.25 19:46:57.243                       REQ 1 Received: (Move Up)
 03.03.25 19:47:01.971                       REQ 1 Received: (Move Left)
 ```
-
 - `2025-03-02`:
     - Can now test that a message can be exchange between client/server:
       - start the server: `./_build/default/backend/server.exe`

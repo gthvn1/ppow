@@ -59,8 +59,8 @@ let () =
     {
       G.width = 400;
       G.height = 300;
-      G.ball = { x = 100.; y = 100.; radius = 10.; dx = 2.; dy = 2. };
-      G.stick1 = { x = 30.; y = 40.; width = 2.; height = 40. };
+      G.ball = { x = 100.; y = 100.; radius = 5.; dx = 2.; dy = 2. };
+      G.stick1 = { x = 30.; y = 40.; width = 5.; height = 40. };
     }
   in
   Lwt_mvar.put game_state init_state |> ignore;
