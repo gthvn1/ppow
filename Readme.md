@@ -34,11 +34,12 @@ in OCaml it looks an easy way to serialize OCaml values.
 # Install & run
 
 - Personally I work in a local switch: `opam switch create ./`
-  - my compiler is `ocaml-base-compiler.5.3.0`
+  - my compiler is `ocaml-base-compiler.5.3.0`, also tested with `5.2.1`
 - install dune: `opam install dune`
   - You can install extra packages like *lsp*, *utop*, etc...
 - ensure your environment is properly updated: `eval $(opam env)`
-- `opam install . --deps-only`
+- if you use a local switch everything should be already installed
+  - otherwise install dependencies: `opam install . --deps-only`
 - update your environment again, we never know... `eval $(opam env)`
 - `dune build`
 - `./_build/default/backend/server.exe`
