@@ -2,8 +2,8 @@ open Lwt.Infix
 module G = Game_types
 module E = Engine
 
-(* list of connected clients *)
-let clients = ref []
+(* keep a list of connected clients *)
+let clients = Lwt_mvar.create_empty ()
 
 (* The state is updated in different threads so we need a shared game
 state *)
@@ -18,20 +18,26 @@ let rec game_loop () =
   Lwt_mvar.put game_state new_state >>= fun () ->
   let sexp = G.sexp_of_server_message (Update new_state) in
   let resp = Sexplib.Sexp.to_string sexp in
-  Lwt_list.iter_p (fun websocket -> Dream.send websocket resp) !clients
-  >>= fun () -> game_loop ()
+  (* Now that we have the new game state we can send it to all connected clients *)
+  Lwt_mvar.take clients >>= fun connected_clients ->
+  Lwt_list.iter_p (fun websocket -> Dream.send websocket resp) connected_clients
+  >>= fun () ->
+  Lwt_mvar.put clients connected_clients >>= fun () -> game_loop ()
 
 (* Websocket handler *)
 let websocket_handler websocket =
   Dream.log "Client connected!";
-  clients := websocket :: !clients;
-
+  Lwt_mvar.take clients >>= fun connected_clients ->
+  Lwt_mvar.put clients (websocket :: connected_clients) >>= fun () ->
   let rec loop () =
     Dream.receive websocket >>= function
     | None ->
         Dream.log "Client disconnected!";
-        clients := List.filter (fun w -> w <> websocket) !clients;
-        Lwt.return_unit
+        Lwt_mvar.take clients >>= fun connected_clients ->
+        Lwt_mvar.put clients
+          (* Fix issue#1: Use physical equality instead of = *)
+          (List.filter (fun w -> not (w == websocket)) connected_clients)
+        >>= fun () -> Dream.close_websocket websocket
     | Some msg -> (
         Dream.log "Received: %s" msg;
         let client_msg = Sexplib.Sexp.of_string msg in
@@ -64,6 +70,7 @@ let () =
     }
   in
   Lwt_mvar.put game_state init_state |> ignore;
+  Lwt_mvar.put clients [] |> ignore;
   Lwt.async (fun () -> game_loop ());
   Dream.run @@ Dream.logger
   @@ Dream.router
