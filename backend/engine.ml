@@ -79,7 +79,9 @@ let ball_hit_rect (bx, by, radius) (rx, ry, rw, rh) =
 
 let update_state (state : G.state) =
   let b = state.ball in
-  let rect = state.paddle1 in
+  (* TODO: check collisions with all paddles and not only the first one *)
+  let paddles_lst = G.PMap.to_list state.paddles in
+  let _id, rect = List.hd paddles_lst in
   (* update the position *)
   let x = b.x +. b.dx in
   let y = b.y +. b.dy in
@@ -111,18 +113,23 @@ let update_state (state : G.state) =
   { state with ball = { state.ball with x; y; dx; dy } }
 
 let move_paddle (state : G.state) (direction : G.direction) : G.state =
-  let s = state.paddle1 in
+  (* TODO: pass the id as parameter and only update the correct paddle *)
+  let paddles_lst = G.PMap.to_list state.paddles in
+  let id, paddle = List.hd paddles_lst in
   (* Helper function to constraint the deplacement of the paddle *)
   let clamp min_val max_val v =
     if v < min_val then min_val else if v > max_val then max_val else v
   in
-  let max_height = float state.height -. s.height in
-  let max_width = float state.width -. s.width in
+  let max_height = float state.height -. paddle.height in
+  let max_width = float state.width -. paddle.width in
   let new_paddle : G.paddle =
     match direction with
-    | Up -> { s with y = clamp 0. max_height (s.y -. 10.) }
-    | Down -> { s with y = clamp 0. max_height (s.y +. 10.) }
-    | Left -> { s with x = clamp 0. max_width (s.x -. 10.) }
-    | Right -> { s with x = clamp 0. max_width (s.x +. 10.) }
+    | Up -> { paddle with y = clamp 0. max_height (paddle.y -. 10.) }
+    | Down -> { paddle with y = clamp 0. max_height (paddle.y +. 10.) }
+    | Left -> { paddle with x = clamp 0. max_width (paddle.x -. 10.) }
+    | Right -> { paddle with x = clamp 0. max_width (paddle.x +. 10.) }
   in
-  { state with paddle1 = new_paddle }
+  {
+    state with
+    paddles = G.PMap.update id (fun _ -> Some new_paddle) state.paddles;
+  }

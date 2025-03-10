@@ -2,7 +2,7 @@ open Lwt.Infix
 module G = Game_types
 module E = Engine
 
-(* keep connected clients and their sticks.
+(* keep connected clients and their paddles.
    We are expecting a maximum of 4 clients to play a double *)
 module WebSocketSet = Set.Make (struct
   type t = Dream.websocket * int
@@ -73,12 +73,13 @@ let websocket_handler websocket =
   loop ()
 
 let () =
+  let p : G.paddle = { x = 30.; y = 40.; width = 5.; height = 40. } in
   let init_state : G.state =
     {
       G.width = 400;
       G.height = 300;
       G.ball = { x = 100.; y = 100.; radius = 5.; dx = 2.; dy = 2. };
-      G.paddle1 = { x = 30.; y = 40.; width = 5.; height = 40. };
+      G.paddles = G.PMap.(empty |> add 0 p);
     }
   in
   Lwt_mvar.put game_state init_state |> ignore;

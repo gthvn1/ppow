@@ -4,7 +4,7 @@ module G = Game_types
 
 let doc = Dom_html.document
 let ball : G.ball ref = ref { G.x = 0.; y = 0.; radius = 0.; dx = 0.; dy = 0. }
-let paddle : G.paddle ref = ref { G.x = 0.; y = 0.; width = 0.; height = 0. }
+let paddles : G.paddle G.PMap.t ref = ref G.PMap.empty
 
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
@@ -59,9 +59,11 @@ let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
     ctx##.lineWidth := Js.float 4.;
     ctx##.strokeStyle := Js.string "black";
     ctx##stroke;
-    (* Draw paddle *)
-    ctx##rect (Js.float !paddle.x) (Js.float !paddle.y) (Js.float !paddle.width)
-      (Js.float !paddle.height);
+    (* TODO Draw all paddles + check if we don't ref empty map *)
+    let paddles_lst = G.PMap.to_list !paddles in
+    let _id, paddle = List.hd paddles_lst in
+    ctx##rect (Js.float paddle.x) (Js.float paddle.y) (Js.float paddle.width)
+      (Js.float paddle.height);
     ctx##stroke;
     ctx##closePath;
 
@@ -116,7 +118,7 @@ let setup_websocket () =
             Js._false
         | Update state ->
             ball := state.G.ball;
-            paddle := state.G.paddle1;
+            paddles := state.G.paddles;
             Js_of_ocaml.Console.console##log "Received state update";
             Js._false);
   ws
