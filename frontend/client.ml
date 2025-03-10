@@ -40,23 +40,28 @@ let create_canvas (width : int) (height : int) =
   canvas##.style##.border := Js.string "1px solid black";
   canvas
 
-let animate ctx canvas =
+let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
+    (canvas : Dom_html.canvasElement Js.t) =
   let rec loop _timestamp =
     (* Clear canvas *)
-    ctx##clearRect 0. 0.
-      (float_of_int canvas##.width)
-      (float_of_int canvas##.height);
+    ctx##clearRect (Js.float 0.) (Js.float 0.)
+      (Js.float (float canvas##.width))
+      (Js.float (float canvas##.height));
 
     ctx##beginPath;
     (* Draw ball *)
-    ctx##arc !ball.x !ball.y !ball.radius 0. (2. *. Float.pi) Js._false;
+    ctx##arc (Js.float !ball.x) (Js.float !ball.y) (Js.float !ball.radius)
+      (Js.float 0.)
+      (Js.float (2. *. Float.pi))
+      Js._false;
     ctx##.fillStyle := Js.string "white";
     ctx##fill;
     ctx##.lineWidth := Js.float 4.;
     ctx##.strokeStyle := Js.string "black";
     ctx##stroke;
     (* Draw stick *)
-    ctx##rect !stick.x !stick.y !stick.width !stick.height;
+    ctx##rect (Js.float !stick.x) (Js.float !stick.y) (Js.float !stick.width)
+      (Js.float !stick.height);
     ctx##stroke;
     ctx##closePath;
 
@@ -101,18 +106,18 @@ let setup_websocket () =
         let server_msg = Sexplib.Sexp.of_string msg in
         match G.server_message_of_sexp server_msg with
         | Init_ack (width, height) ->
-            Firebug.console##log
+            Js_of_ocaml.Console.console##log
               (Printf.sprintf "Received init ack: %d %d" width height);
             (* Now create the canvas and start the game *)
             start_game width height;
             Js._true
         | Move_ack ->
-            Firebug.console##log "Received move ack";
+            Js_of_ocaml.Console.console##log "Received move ack";
             Js._true
         | Update state ->
             ball := state.G.ball;
             stick := state.G.stick1;
-            Firebug.console##log "Received state update";
+            Js_of_ocaml.Console.console##log "Received state update";
             Js._true);
   ws
 
@@ -147,11 +152,11 @@ let onload _ =
       | _ -> None
     in
     if Option.is_some dir then (
-      Firebug.console##log "Got some direction";
+      Js_of_ocaml.Console.console##log "Got some direction";
       let m = G.Move (Option.get dir) in
       let move_msg = Sexplib.Sexp.to_string @@ G.(sexp_of_client_message m) in
       ws##send (Js.string move_msg))
-    else Firebug.console##log (Js.string "key not managed");
+    else Js_of_ocaml.Console.console##log (Js.string "key not managed");
     Js._true
   in
   let ignored_keycode = ref (-1) in
@@ -172,7 +177,7 @@ let onload _ =
         let msg = Js.to_string input##.value in
         match G.direction_of_string msg with
         | None ->
-            Firebug.console##log
+            Js_of_ocaml.Console.console##log
               (Printf.sprintf "%s is not a valid direction" msg);
             Js._true
         | Some d ->

@@ -31,6 +31,19 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [ ] add another stick
 - [ ] implement ping pong
 
+# Install & run
+
+- Personally I work in a local switch: `opam switch create ./`
+  - my compiler is `ocaml-base-compiler.5.3.0`
+- install dune: `opam install dune`
+  - You can install extra packages like *lsp*, *utop*, etc...
+- ensure your environment is properly updated: `eval $(opam env)`
+- `opam install . --deps-only`
+- update your environment again, we never know... `eval $(opam env)`
+- `dune build`
+- `./_build/default/backend/server.exe`
+- Open the `index.html` in the browser
+
 # Changelog
 
 - `2025-03-08`:

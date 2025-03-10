@@ -7,5 +7,17 @@
 (package
  (name ppow)
  (allow_empty true)
+ (license GPL-3.0-only)
+ (authors "Me")
+ (maintainers "gthvn1@example.com")
+ (homepage "https://github.com/gthvn1/ppow")
+ (bug_reports "https://github.com/gthvn1/ppow/issues")
+ (synopsis "Ping Pong on the Web")
  (version 0.1)
- (depends dream js_of_ocaml js_of_ocaml-lwt sexplib))
+ (depends
+   dream
+   graphics
+   js_of_ocaml
+   js_of_ocaml-lwt
+   ppx_sexp_conv
+   sexplib))
