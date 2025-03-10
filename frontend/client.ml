@@ -97,7 +97,7 @@ let setup_websocket () =
         in
         ws##send (Js.string init_msg);
 
-        Js._true);
+        Js._false);
 
   ws##.onmessage :=
     Dom.handler (fun ev ->
@@ -110,15 +110,15 @@ let setup_websocket () =
               (Printf.sprintf "Received init ack: %d %d" width height);
             (* Now create the canvas and start the game *)
             start_game width height;
-            Js._true
+            Js._false
         | Move_ack ->
             Js_of_ocaml.Console.console##log "Received move ack";
-            Js._true
+            Js._false
         | Update state ->
             ball := state.G.ball;
             stick := state.G.stick1;
             Js_of_ocaml.Console.console##log "Received state update";
-            Js._true);
+            Js._false);
   ws
 
 let onload _ =
