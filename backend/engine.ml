@@ -43,37 +43,39 @@ module G = Game_types
 *)
 
 (* it is the side hit by the ball if any *)
-type side = Up | Down | Left | Right
-
-let closest_point_from_rectangle (cx, cy) (rx, ry, rw, rh) =
-  let px = max rx (min cx (rx +. rw)) in
-  let py = max ry (min cy (ry +. rh)) in
-  (px, py)
-
-let distance (x1, y1) (x2, y2) =
-  let dx = x2 -. x1 in
-  let dy = y2 -. y1 in
-  sqrt ((dx *. dx) +. (dy *. dy))
+type side = Top | Bottom | Left | Right
 
 (* NOTE: It works if the deplacement of the ball is less than the width of the
          stick. Otherwise when we compute the new coordinate of the ball it can be
          on the other side of the stick without detecting the hit. It is tunneling
          effect (I think)...
 *)
-let ball_hit_rect (bx, by, radius) (rx, ry, rw, rh) : side option =
-  let px, py = closest_point_from_rectangle (bx, by) (rx, ry, rw, rh) in
-  let d = distance (bx, by) (px, py) in
-  if d > radius then None
-  else if px = rx then Some Left
-  else if px = rx +. rw then Some Right
-  else if py = ry then Some Up
-  else if py = ry +. rh then Some Down
-  else (
-    Printf.printf "closest point is (%f,%f)\n" px py;
-    Printf.printf "ball at (%f, %f)\n" bx by;
-    Printf.printf "Rect at (%f, %f) width = %f , height = %f\n" rx ry rw rh;
-    Printf.printf "distance = %f , radius = %f\n%!" d radius;
-    failwith "unreachable")
+let closest_point_from_rect (cx, cy) (rx, ry, rw, rh) =
+  let px = max rx (min cx (rx +. rw)) in
+  let py = max ry (min cy (ry +. rh)) in
+  (px, py)
+
+let ball_hit_rect (bx, by, radius) (rx, ry, rw, rh) =
+  let x, y = closest_point_from_rect (bx, by) (rx, ry, rw, rh) in
+  let dist = sqrt (((bx -. x) ** 2.) +. ((by -. y) ** 2.)) in
+  if dist <= radius then
+    (* Ball hit the rectangle *)
+    Some
+      (if x = rx then Left
+       else if x = rx +. rw then Right
+       else if y = ry then Top
+       else if y = ry +. rh then Bottom
+       else (
+         Printf.eprintf
+           "closest point is not on the perimeter... return bottom by default";
+         Printf.eprintf "closest point is (%f,%f)\n" x y;
+         Printf.eprintf "ball at (%f, %f)\n" bx by;
+         Printf.eprintf "rect at (%f, %f, w:%f, h:%f)\n" rx ry rw rh;
+         Printf.eprintf "distance = %f , radius = %f\n%!" dist radius;
+         Bottom))
+  else
+    (* No collision *)
+    None
 
 let update_state (state : G.state) =
   let b = state.ball in
@@ -90,8 +92,8 @@ let update_state (state : G.state) =
     | None -> (x, y, b.dx, b.dy)
     | Some Left -> (rect.x -. b.radius, y, -.b.dx, b.dy)
     | Some Right -> (rect.x +. rect.width +. b.radius, y, -.b.dx, b.dy)
-    | Some Up -> (x, rect.y -. b.radius, b.dx, -.b.dy)
-    | Some Down -> (x, rect.y +. rect.height +. b.radius, b.dx, -.b.dy)
+    | Some Top -> (x, rect.y -. b.radius, b.dx, -.b.dy)
+    | Some Bottom -> (x, rect.y +. rect.height +. b.radius, b.dx, -.b.dy)
   in
   (* check if the ball hit boundaries *)
   let x, dx =
