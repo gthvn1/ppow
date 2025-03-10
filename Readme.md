@@ -1,5 +1,3 @@
-# Ping pong on the Web
-
 <img src="images/screenshot.png" alt="OCaml plays ping pong" />
 
 - We want to have a ping pong game on the web
