@@ -3,10 +3,10 @@ open Sexplib.Std
 type ball = { x : float; y : float; radius : float; dx : float; dy : float }
 [@@deriving sexp]
 
-type stick = { x : float; y : float; width : float; height : float }
+type paddle = { x : float; y : float; width : float; height : float }
 [@@deriving sexp]
 
-type state = { width : int; height : int; ball : ball; stick1 : stick }
+type state = { width : int; height : int; ball : ball; paddle1 : paddle }
 [@@deriving sexp]
 
 type server_message = Init_ack of (int * int) | Move_ack | Update of state

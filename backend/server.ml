@@ -52,7 +52,7 @@ let websocket_handler websocket =
             Dream.send websocket resp >>= loop
         | G.Move d ->
             Lwt_mvar.take game_state >>= fun state ->
-            let new_state = E.move_stick state d in
+            let new_state = E.move_paddle state d in
             Lwt_mvar.put game_state new_state >>= fun () ->
             let sexp = G.sexp_of_server_message Move_ack in
             let resp = Sexplib.Sexp.to_string sexp in
@@ -66,7 +66,7 @@ let () =
       G.width = 400;
       G.height = 300;
       G.ball = { x = 100.; y = 100.; radius = 5.; dx = 2.; dy = 2. };
-      G.stick1 = { x = 30.; y = 40.; width = 5.; height = 40. };
+      G.paddle1 = { x = 30.; y = 40.; width = 5.; height = 40. };
     }
   in
   Lwt_mvar.put game_state init_state |> ignore;

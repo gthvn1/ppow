@@ -24,10 +24,10 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] understand websockets
 - [x] simple communication between backend/frontend to move the ball
 - [x] move the ball alone
-- [x] move one stick
-- [x] add interaction between stick and ball
+- [x] move one paddle
+- [x] add interaction between paddle and ball
 - [ ] handle multiple connections
-- [ ] add another stick managed by another client
+- [ ] add another paddle managed by another client
 - [ ] implement ping pong
 
 # Install & run
@@ -50,14 +50,14 @@ in OCaml it looks an easy way to serialize OCaml values.
 # Changelog
 
 - `2025-03-08`:
-    - Detect hits with boundaries and stick
+    - Detect hits with boundaries and paddle
 
 - `2025-03-05`:
     - Use another CSS and group input and button in a div
     - Fix an issue when hitting walls with the ball
-    - Add the first stick
-    - Move the stick by sending message
-    - Move the stick using arrow keys
+    - Add the first paddle
+    - Move the paddle by sending message
+    - Move the paddle using arrow keys
       - TODO: it moves but we need to manage boundaries and collision
 
 - `2025-03-03`:

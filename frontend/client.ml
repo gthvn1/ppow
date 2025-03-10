@@ -4,7 +4,7 @@ module G = Game_types
 
 let doc = Dom_html.document
 let ball : G.ball ref = ref { G.x = 0.; y = 0.; radius = 0.; dx = 0.; dy = 0. }
-let stick : G.stick ref = ref { G.x = 0.; y = 0.; width = 0.; height = 0. }
+let paddle : G.paddle ref = ref { G.x = 0.; y = 0.; width = 0.; height = 0. }
 
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
@@ -59,9 +59,9 @@ let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
     ctx##.lineWidth := Js.float 4.;
     ctx##.strokeStyle := Js.string "black";
     ctx##stroke;
-    (* Draw stick *)
-    ctx##rect (Js.float !stick.x) (Js.float !stick.y) (Js.float !stick.width)
-      (Js.float !stick.height);
+    (* Draw paddle *)
+    ctx##rect (Js.float !paddle.x) (Js.float !paddle.y) (Js.float !paddle.width)
+      (Js.float !paddle.height);
     ctx##stroke;
     ctx##closePath;
 
@@ -116,7 +116,7 @@ let setup_websocket () =
             Js._false
         | Update state ->
             ball := state.G.ball;
-            stick := state.G.stick1;
+            paddle := state.G.paddle1;
             Js_of_ocaml.Console.console##log "Received state update";
             Js._false);
   ws
@@ -127,7 +127,7 @@ let onload _ =
   let input = create_input () in
   let btn = create_button "Send" in
   let usage =
-    create_usage "Use arrow keys to move the stick, or use the text input"
+    create_usage "Use arrow keys to move the paddle, or use the text input"
   in
   let status = create_status () in
   let ws = setup_websocket () in

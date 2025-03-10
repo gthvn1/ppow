@@ -21,7 +21,7 @@ module G = Game_types
   - Top Wall    (cy - radius < 0) → Reverse dy
   - Bottom Wall (cy + radius > height) → Reverse dy
 
-# Collisions of the ball with the stick:
+# Collisions of the ball with the paddle:
   - Rectangle corners:
     - Left (rx), Right (rx + rw), Top (ry), Bottom (ry + rh)
 
@@ -46,8 +46,8 @@ module G = Game_types
 type side = Top | Bottom | Left | Right
 
 (* NOTE: It works if the deplacement of the ball is less than the width of the
-         stick. Otherwise when we compute the new coordinate of the ball it can be
-         on the other side of the stick without detecting the hit. It is tunneling
+         paddle. Otherwise when we compute the new coordinate of the ball it can be
+         on the other side of the paddle without detecting the hit. It is tunneling
          effect (I think)...
 *)
 let closest_point_from_rect (cx, cy) (rx, ry, rw, rh) =
@@ -79,11 +79,11 @@ let ball_hit_rect (bx, by, radius) (rx, ry, rw, rh) =
 
 let update_state (state : G.state) =
   let b = state.ball in
-  let rect = state.stick1 in
+  let rect = state.paddle1 in
   (* update the position *)
   let x = b.x +. b.dx in
   let y = b.y +. b.dy in
-  (* check if the ball hit the stick *)
+  (* check if the ball hit the paddle *)
   let hit =
     ball_hit_rect (x, y, b.radius) (rect.x, rect.y, rect.width, rect.height)
   in
@@ -110,19 +110,19 @@ let update_state (state : G.state) =
   in
   { state with ball = { state.ball with x; y; dx; dy } }
 
-let move_stick (state : G.state) (direction : G.direction) : G.state =
-  let s = state.stick1 in
-  (* Helper function to constraint the deplacement of the stick *)
+let move_paddle (state : G.state) (direction : G.direction) : G.state =
+  let s = state.paddle1 in
+  (* Helper function to constraint the deplacement of the paddle *)
   let clamp min_val max_val v =
     if v < min_val then min_val else if v > max_val then max_val else v
   in
   let max_height = float state.height -. s.height in
   let max_width = float state.width -. s.width in
-  let new_stick : G.stick =
+  let new_paddle : G.paddle =
     match direction with
     | Up -> { s with y = clamp 0. max_height (s.y -. 10.) }
     | Down -> { s with y = clamp 0. max_height (s.y +. 10.) }
     | Left -> { s with x = clamp 0. max_width (s.x -. 10.) }
     | Right -> { s with x = clamp 0. max_width (s.x +. 10.) }
   in
-  { state with stick1 = new_stick }
+  { state with paddle1 = new_paddle }
