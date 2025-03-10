@@ -9,7 +9,7 @@ homepage: "https://github.com/gthvn1/ppow"
 bug-reports: "https://github.com/gthvn1/ppow/issues"
 depends: [
   "dune" {>= "3.17"}
-  "dream"
+  "dream" {= "1.0.0~alpha8"}
   "graphics"
   "js_of_ocaml"
   "js_of_ocaml-lwt"

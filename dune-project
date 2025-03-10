@@ -15,7 +15,7 @@
  (synopsis "Ping Pong on the Web")
  (version 0.1)
  (depends
-   dream
+   (dream (= "1.0.0~alpha8"))
    graphics
    js_of_ocaml
    js_of_ocaml-lwt
