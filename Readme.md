@@ -26,7 +26,8 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] move the ball alone
 - [x] move one stick
 - [x] add interaction between stick and ball
-- [ ] add another stick
+- [ ] handle multiple connections
+- [ ] add another stick managed by another client
 - [ ] implement ping pong
 
 # Install & run
