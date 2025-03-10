@@ -1,3 +1,4 @@
 (executable
  (name server)
+ (public_name ppow_server)
  (libraries game_types dream lwt))

@@ -34,7 +34,8 @@ in OCaml it looks an easy way to serialize OCaml values.
 - Personally I work in a local switch: `opam switch create ./`
   - my compiler is `ocaml-base-compiler.5.3.0`, also tested with `5.2.1`
 - install dune: `opam install dune`
-  - You can install extra packages like *lsp*, *utop*, etc...
+  - when developing you can install extra packages like *ocaml-lsp-server*,
+  *ocamlformat*, *utop*, etc...
 - ensure your environment is properly updated: `eval $(opam env)`
 - if you use a local switch everything should be already installed
   - otherwise install dependencies: `opam install . --deps-only`
@@ -42,6 +43,8 @@ in OCaml it looks an easy way to serialize OCaml values.
 - `dune build`
 - `./_build/default/backend/server.exe`
 - Open the `index.html` in the browser
+- You can also install it: `dune install`
+- once installed in your switch you should be able to run: `ppow_server`
 
 # Changelog
 
