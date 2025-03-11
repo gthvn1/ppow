@@ -3,7 +3,6 @@ open Sexplib.Std
 type ball = { x : float; y : float; radius : float; dx : float; dy : float }
 [@@deriving sexp]
 
-(* As there is one paddle per client we need to identfy them *)
 type paddle = { x : float; y : float; width : float; height : float }
 [@@deriving sexp]
 
