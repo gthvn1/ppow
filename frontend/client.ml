@@ -59,12 +59,14 @@ let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
     ctx##.lineWidth := Js.float 4.;
     ctx##.strokeStyle := Js.string "black";
     ctx##stroke;
-    (* TODO Draw all paddles + check if we don't ref empty map *)
-    let paddles_lst = G.PMap.to_list !paddles in
-    let _id, paddle = List.hd paddles_lst in
-    ctx##rect (Js.float paddle.x) (Js.float paddle.y) (Js.float paddle.width)
-      (Js.float paddle.height);
-    ctx##stroke;
+    (* TODO Draw all paddles *)
+    (if G.PMap.is_empty !paddles then ()
+     else
+       let paddles_lst = G.PMap.to_list !paddles in
+       let _id, paddle = List.hd paddles_lst in
+       ctx##rect (Js.float paddle.x) (Js.float paddle.y) (Js.float paddle.width)
+         (Js.float paddle.height);
+       ctx##stroke);
     ctx##closePath;
 
     (* Request next animation frame *)

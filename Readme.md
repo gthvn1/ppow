@@ -26,7 +26,7 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] move the ball alone
 - [x] move one paddle
 - [x] add interaction between paddle and ball
-- [ ] handle multiple connections
+- [x] handle multiple connections
 - [ ] add another paddle managed by another client
 - [ ] implement ping pong
 
@@ -49,30 +49,40 @@ in OCaml it looks an easy way to serialize OCaml values.
 
 # Changelog
 
+- `2025-03-11`:
+  - Use a Map to keep track of paddle
+    - the paddle is associated to an ID
+    - the ID is the client ID so from the server we will be able to only
+    move the paddle of a client (not yet implemented)
+  - Keep track of the next ID
+  - Generate a paddle when the client is connected
+  - Remove the paddle when the client is disconnected
+  - We generate several paddle but we only update the first one
+
 - `2025-03-08`:
-    - Detect hits with boundaries and paddle
+  - Detect hits with boundaries and paddle
 
 - `2025-03-05`:
-    - Use another CSS and group input and button in a div
-    - Fix an issue when hitting walls with the ball
-    - Add the first paddle
-    - Move the paddle by sending message
-    - Move the paddle using arrow keys
-      - TODO: it moves but we need to manage boundaries and collision
+  - Use another CSS and group input and button in a div
+  - Fix an issue when hitting walls with the ball
+  - Add the first paddle
+  - Move the paddle by sending message
+  - Move the paddle using arrow keys
+    - TODO: it moves but we need to manage boundaries and collision
 
 - `2025-03-03`:
-    - Remove `websocket_client` because frontend is working now
-    - Create `lib/game_types.ml` that describes
-      - the state of the game
-      - the client message
-        - init to get the canvas size and the ball position
-        - move to direction
-      - the server message
-        - ack to init
-        - ack to move
-      - Init of canvas is done
-      - Messages are exchanged
-      - Ball is moving... next is interaction
+  - Remove `websocket_client` because frontend is working now
+  - Create `lib/game_types.ml` that describes
+    - the state of the game
+    - the client message
+      - init to get the canvas size and the ball position
+      - move to direction
+    - the server message
+      - ack to init
+      - ack to move
+    - Init of canvas is done
+    - Messages are exchanged
+    - Ball is moving... next is interaction
 ```sh
 ❯ dune build && ./_build/default/backend/server.exe
 03.03.25 19:46:48.853                       Running at http://localhost:8080
