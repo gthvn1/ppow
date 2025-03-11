@@ -50,10 +50,11 @@ in OCaml it looks an easy way to serialize OCaml values.
 # Changelog
 
 - `2025-03-11`:
-  - Use a Map to keep track of paddle
+  - Use a Map to keep track of paddles in the game
     - the paddle is associated to an ID
     - the ID is the client ID so from the server we will be able to only
     move the paddle of a client (not yet implemented)
+    - each client owns a paddle
   - Keep track of the next ID
   - Generate a paddle when the client is connected
   - Remove the paddle when the client is disconnected
