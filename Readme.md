@@ -40,7 +40,7 @@ in OCaml it looks an easy way to serialize OCaml values.
 - ensure your environment is properly updated: `eval $(opam env)`
 - if you use a local switch everything should be already installed
   - otherwise install dependencies: `opam install . --deps-only`
-- update your environment again, we never know... `eval $(opam env)`
+- update your environment: `eval $(opam env)`
 - `dune build`
 - `./_build/default/backend/server.exe`
 - Open the `index.html` in the browser
