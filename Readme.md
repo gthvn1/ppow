@@ -49,6 +49,12 @@ in OCaml it looks an easy way to serialize OCaml values.
 
 # Changelog
 
+- `2025-03-15`:
+  - Add `shell.nix`
+  - client: display all paddles. Now if we connect another client
+  we see two paddles. Only the first one is managed so it is the next
+  step to manage all paddles.
+
 - `2025-03-11`:
   - Use a Map to keep track of paddles in the game
     - the paddle is associated to an ID
