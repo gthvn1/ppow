@@ -79,7 +79,7 @@ let websocket_handler websocket =
             Dream.send websocket resp >>= loop
         | G.Move d ->
             Lwt_mvar.take game_state >>= fun state ->
-            let new_state = E.move_paddle state d in
+            let new_state = E.move_paddle state d myid in
             Lwt_mvar.put game_state new_state >>= fun () ->
             let sexp = G.sexp_of_server_message Move_ack in
             let resp = Sexplib.Sexp.to_string sexp in

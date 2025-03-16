@@ -27,7 +27,7 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] move one paddle
 - [x] add interaction between paddle and ball
 - [x] handle multiple connections
-- [ ] add another paddle managed by another client
+- [x] add another paddle managed by others clients
 - [ ] implement ping pong
 
 # Install & run
@@ -52,11 +52,12 @@ in OCaml it looks an easy way to serialize OCaml values.
 
 - `2025-03-16`:
   - Add `shell.nix`
-  - client: display all paddles. Now if we connect another client
+  - Display all paddles. Now if we connect another client
   we see two paddles. Only the first one is managed so it is the next
   step to manage all paddles.
-  - manage collision between ball and all paddles
-  - manage collision between paddles
+  - Manage collision between ball and all paddles
+  - Manage collision between paddles
+  - Client manages his own paddle
 
 - `2025-03-11`:
   - Use a Map to keep track of paddles in the game

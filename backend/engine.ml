@@ -129,34 +129,41 @@ let two_paddles_in_collision (p1 : G.paddle) (p2 : G.paddle) : bool =
   else if p1.y >= p2.y +. p2.height then false
   else true
 
-let move_paddle (state : G.state) (direction : G.direction) : G.state =
-  (* TODO: pass the id as parameter and only update the correct paddle *)
-  let paddles_lst = G.PMap.to_list state.paddles in
-  let id, paddle = List.hd paddles_lst in
-  let max_height = float state.height -. paddle.height in
-  let max_width = float state.width -. paddle.width in
-  (* Helper function to constraint the deplacement of the paddle *)
-  let clamp min_val max_val v =
-    if v < min_val then min_val else if v > max_val then max_val else v
-  in
-  (* Helper function to check if the given paddle collidse with others *)
-  let paddle_collides paddle =
-    List.fold_left
-      (fun acc (p_id, p) ->
-        if p_id = id then acc || false
-        else acc || two_paddles_in_collision paddle p)
-      false paddles_lst
-  in
-  let new_paddle : G.paddle =
-    match direction with
-    | Up -> { paddle with y = clamp 0. max_height (paddle.y -. 10.) }
-    | Down -> { paddle with y = clamp 0. max_height (paddle.y +. 10.) }
-    | Left -> { paddle with x = clamp 0. max_width (paddle.x -. 10.) }
-    | Right -> { paddle with x = clamp 0. max_width (paddle.x +. 10.) }
-  in
-  if paddle_collides new_paddle then state
-  else
-    {
-      state with
-      paddles = G.PMap.update id (fun _ -> Some new_paddle) state.paddles;
-    }
+(** [move_paddle state direction] moves the paddle in the given direction. It
+    expected to be called with the state under a mutex lock. *)
+let move_paddle (state : G.state) (direction : G.direction) (id : int) : G.state
+    =
+  match G.PMap.find_opt id state.paddles with
+  | None ->
+      Printf.eprintf "ERROR: Paddle with id %d not found\n" id;
+      state
+  | Some paddle ->
+      let max_height = float state.height -. paddle.height in
+      let max_width = float state.width -. paddle.width in
+      (* Helper function to constraint the deplacement of the paddle *)
+      let clamp min_val max_val v =
+        if v < min_val then min_val else if v > max_val then max_val else v
+      in
+      (* Helper function to check if the given paddle collidse with others *)
+      let paddle_collides paddle =
+        let p_lst = G.PMap.to_list state.paddles in
+        List.fold_left
+          (fun acc (p_id, p) ->
+            if p_id = id then acc || false
+            else acc || two_paddles_in_collision paddle p)
+          false p_lst
+      in
+      let delta = 10. in
+      let new_paddle : G.paddle =
+        match direction with
+        | Up -> { paddle with y = clamp 0. max_height (paddle.y -. delta) }
+        | Down -> { paddle with y = clamp 0. max_height (paddle.y +. delta) }
+        | Left -> { paddle with x = clamp 0. max_width (paddle.x -. delta) }
+        | Right -> { paddle with x = clamp 0. max_width (paddle.x +. delta) }
+      in
+      if paddle_collides new_paddle then state
+      else
+        {
+          state with
+          paddles = G.PMap.update id (fun _ -> Some new_paddle) state.paddles;
+        }
