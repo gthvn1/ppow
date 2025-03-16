@@ -55,7 +55,8 @@ in OCaml it looks an easy way to serialize OCaml values.
   - client: display all paddles. Now if we connect another client
   we see two paddles. Only the first one is managed so it is the next
   step to manage all paddles.
-  - manage collisions with all paddles
+  - manage collision between ball and all paddles
+  - manage collision between paddles
 
 - `2025-03-11`:
   - Use a Map to keep track of paddles in the game

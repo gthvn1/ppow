@@ -122,16 +122,31 @@ let update_state (state : G.state) =
   List.fold_left ball_paddle_collision state paddles_lst
   |> ball_boundaries_collision
 
+let two_paddles_in_collision (p1 : G.paddle) (p2 : G.paddle) : bool =
+  if p1.x +. p1.width <= p2.x then false
+  else if p1.x >= p2.x +. p2.width then false
+  else if p1.y +. p1.height <= p2.y then false
+  else if p1.y >= p2.y +. p2.height then false
+  else true
+
 let move_paddle (state : G.state) (direction : G.direction) : G.state =
   (* TODO: pass the id as parameter and only update the correct paddle *)
   let paddles_lst = G.PMap.to_list state.paddles in
   let id, paddle = List.hd paddles_lst in
+  let max_height = float state.height -. paddle.height in
+  let max_width = float state.width -. paddle.width in
   (* Helper function to constraint the deplacement of the paddle *)
   let clamp min_val max_val v =
     if v < min_val then min_val else if v > max_val then max_val else v
   in
-  let max_height = float state.height -. paddle.height in
-  let max_width = float state.width -. paddle.width in
+  (* Helper function to check if the given paddle collidse with others *)
+  let paddle_collides paddle =
+    List.fold_left
+      (fun acc (p_id, p) ->
+        if p_id = id then acc || false
+        else acc || two_paddles_in_collision paddle p)
+      false paddles_lst
+  in
   let new_paddle : G.paddle =
     match direction with
     | Up -> { paddle with y = clamp 0. max_height (paddle.y -. 10.) }
@@ -139,7 +154,9 @@ let move_paddle (state : G.state) (direction : G.direction) : G.state =
     | Left -> { paddle with x = clamp 0. max_width (paddle.x -. 10.) }
     | Right -> { paddle with x = clamp 0. max_width (paddle.x +. 10.) }
   in
-  {
-    state with
-    paddles = G.PMap.update id (fun _ -> Some new_paddle) state.paddles;
-  }
+  if paddle_collides new_paddle then state
+  else
+    {
+      state with
+      paddles = G.PMap.update id (fun _ -> Some new_paddle) state.paddles;
+    }
