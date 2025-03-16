@@ -117,15 +117,10 @@ let ball_boundaries_collision (state : G.state) : G.state =
   { state with ball = { state.ball with x; y; dx; dy } }
 
 let update_state (state : G.state) =
-  (* TODO: check collisions with all paddles and not only the first one *)
-  let state =
-    if G.PMap.is_empty state.paddles then state
-    else
-      let paddles_lst = G.PMap.to_list state.paddles in
-      let _id, rect = List.hd paddles_lst in
-      ball_paddle_collision state rect
-  in
-  ball_boundaries_collision state
+  (* paddles_lst is (id, paddle) *)
+  let paddles_lst = G.PMap.to_list state.paddles |> List.map snd in
+  List.fold_left ball_paddle_collision state paddles_lst
+  |> ball_boundaries_collision
 
 let move_paddle (state : G.state) (direction : G.direction) : G.state =
   (* TODO: pass the id as parameter and only update the correct paddle *)
