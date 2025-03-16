@@ -41,9 +41,10 @@ in OCaml it looks an easy way to serialize OCaml values.
 - if you use a local switch everything should be already installed
   - otherwise install dependencies: `opam install . --deps-only`
 - update your environment: `eval $(opam env)`
-- `dune build`
-- `./_build/default/backend/server.exe`
-- Open the `index.html` in the browser
+- build ppow: `dune build`
+- run the server: `dune exec ppow_server` or `./_build/default/backend/server.exe`
+- start client: open the `index.html` in the browser
+- you can start another client by openning the `index.html` in another tab or another browser.
 - You can also install it: `dune install`
 - once installed in your switch you should be able to run: `ppow_server`
 

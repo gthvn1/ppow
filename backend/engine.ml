@@ -77,42 +77,55 @@ let ball_hit_rect (bx, by, radius) (rx, ry, rw, rh) =
     (* No collision *)
     None
 
-let update_state (state : G.state) =
+let ball_paddle_collision (state : G.state) (p : G.paddle) : G.state =
   let b = state.ball in
+
+  (* update the position *)
+  let x = b.x +. b.dx in
+  let y = b.y +. b.dy in
+
+  (* check if the ball hit the paddle *)
+  let hit = ball_hit_rect (x, y, b.radius) (p.x, p.y, p.width, p.height) in
+  let x, y, dx, dy =
+    match hit with
+    | None -> (x, y, b.dx, b.dy)
+    | Some Left -> (p.x -. b.radius, y, -.b.dx, b.dy)
+    | Some Right -> (p.x +. p.width +. b.radius, y, -.b.dx, b.dy)
+    | Some Top -> (x, p.y -. b.radius, b.dx, -.b.dy)
+    | Some Bottom -> (x, p.y +. p.height +. b.radius, b.dx, -.b.dy)
+  in
+  { state with ball = { state.ball with x; y; dx; dy } }
+
+let ball_boundaries_collision (state : G.state) : G.state =
+  let b = state.ball in
+  (* update the position *)
+  let x = b.x +. b.dx in
+  let y = b.y +. b.dy in
+  (* check if the ball hit boundaries *)
+  let x, dx =
+    if x -. b.radius < 0. then (b.radius, -.b.dx)
+    else if x +. b.radius > float state.width then
+      (float state.width -. b.radius, -.b.dx)
+    else (x, b.dx)
+  in
+  let y, dy =
+    if y -. b.radius < 0. then (b.radius, -.b.dy)
+    else if y +. b.radius > float state.height then
+      (float state.height -. b.radius, -.b.dy)
+    else (y, b.dy)
+  in
+  { state with ball = { state.ball with x; y; dx; dy } }
+
+let update_state (state : G.state) =
   (* TODO: check collisions with all paddles and not only the first one *)
-  if G.PMap.is_empty state.paddles then state
-  else
-    let paddles_lst = G.PMap.to_list state.paddles in
-    let _id, rect = List.hd paddles_lst in
-    (* update the position *)
-    let x = b.x +. b.dx in
-    let y = b.y +. b.dy in
-    (* check if the ball hit the paddle *)
-    let hit =
-      ball_hit_rect (x, y, b.radius) (rect.x, rect.y, rect.width, rect.height)
-    in
-    let x, y, dx, dy =
-      match hit with
-      | None -> (x, y, b.dx, b.dy)
-      | Some Left -> (rect.x -. b.radius, y, -.b.dx, b.dy)
-      | Some Right -> (rect.x +. rect.width +. b.radius, y, -.b.dx, b.dy)
-      | Some Top -> (x, rect.y -. b.radius, b.dx, -.b.dy)
-      | Some Bottom -> (x, rect.y +. rect.height +. b.radius, b.dx, -.b.dy)
-    in
-    (* check if the ball hit boundaries *)
-    let x, dx =
-      if x -. b.radius < 0. then (b.radius, -.dx)
-      else if x +. b.radius > float state.width then
-        (float state.width -. b.radius, -.dx)
-      else (x, dx)
-    in
-    let y, dy =
-      if y -. b.radius < 0. then (b.radius, -.dy)
-      else if y +. b.radius > float state.height then
-        (float state.height -. b.radius, -.dy)
-      else (y, dy)
-    in
-    { state with ball = { state.ball with x; y; dx; dy } }
+  let state =
+    if G.PMap.is_empty state.paddles then state
+    else
+      let paddles_lst = G.PMap.to_list state.paddles in
+      let _id, rect = List.hd paddles_lst in
+      ball_paddle_collision state rect
+  in
+  ball_boundaries_collision state
 
 let move_paddle (state : G.state) (direction : G.direction) : G.state =
   (* TODO: pass the id as parameter and only update the correct paddle *)
