@@ -131,8 +131,7 @@ let two_paddles_in_collision (p1 : G.paddle) (p2 : G.paddle) : bool =
 
 (** [move_paddle state direction] moves the paddle in the given direction. It
     expected to be called with the state under a mutex lock. *)
-let move_paddle (state : G.state) (direction : G.direction) (id : int) : G.state
-    =
+let move_paddle (state : G.state) (dir : G.direction) (id : int) : G.state =
   match G.PMap.find_opt id state.paddles with
   | None ->
       Printf.eprintf "ERROR: Paddle with id %d not found\n" id;
@@ -155,7 +154,7 @@ let move_paddle (state : G.state) (direction : G.direction) (id : int) : G.state
       in
       let delta = 10. in
       let new_paddle : G.paddle =
-        match direction with
+        match dir with
         | Up -> { paddle with y = clamp 0. max_height (paddle.y -. delta) }
         | Down -> { paddle with y = clamp 0. max_height (paddle.y +. delta) }
         | Left -> { paddle with x = clamp 0. max_width (paddle.x -. delta) }
