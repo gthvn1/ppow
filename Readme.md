@@ -1,22 +1,48 @@
 <img src="images/screenshot.png" alt="OCaml plays ping pong" />
 
-- We want to have a ping pong game on the web
-- Backend in OCaml -> [Dream](https://aantron.github.io/dream/)
-- Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
-  - Here are [some examples](https://github.com/ocsigen/js_of_ocaml/blob/master/examples)
-- Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
-- The frontend listens for keyboard/mouse events, sends actions to the backend
-- It receives game state updates from the backend and renders them.
-- For the websocket message we will use S-expression. As backend and frontend are written
-in OCaml it looks an easy way to serialize OCaml values.
+# Intro
 
-# Architecture
+We are developing a ping pong game on the web to learn how the frontend and backend communicate.
+The game is written in OCaml because we enjoy working with the language and we want to enhance our
+skills.
 
-- Backend in OCaml using Dream for WebSockets.
-- Frontend in OCaml using js_of_ocaml to render the game.
-- WebSockets for real-time communication between client and server.
+- Tech Stack:
+  
+  - Backend: OCaml with [Dream](https://aantron.github.io/dream/)
+  - Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
+    - Here are [some examples](https://github.com/ocsigen/js_of_ocaml/blob/master/examples)
+  - Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
-# Steps
+- How It Works:
+  
+  - A new paddle is created for each client that connects.
+  - Clients can interact with the ball using its paddle (currently the only action available).
+  - The frontend listens for keyboard events and sends actions to the backend.
+  - The backend processes these actions, updates the game state, and sends updates to all clients.
+  - The frontend receives these updates and renders the game state accordingly.
+
+- Serialization:
+
+  - WebSocket messages are serialized using _S-expressions_, as both the backend and frontend are written in OCaml. This makes it easier to serialize and deserialize OCaml values.
+
+# Build & run
+
+- Personally we work in a local switch: `opam switch create ./`
+  - my compiler is `ocaml-base-compiler.5.3.0`, also tested with `5.2.1`
+- when developing you can install extra packages like *ocaml-lsp-server*,
+  *ocamlformat*, *utop*, etc...
+  - ensure your environment is properly updated: `eval $(opam env)`
+- if you use a local switch everything should be already installed
+  - otherwise install dependencies: `opam install . --deps-only`
+  - update your environment: `eval $(opam env)`
+- build ppow: `dune build`
+- run the server: `dune exec ppow_server` or `./_build/default/backend/server.exe`
+- start client: open the `index.html` in the browser
+  - you can start another client by openning the `index.html` in another tab or another browser.
+- You can also install it: `dune install`
+- once installed in your switch you should be able to run: `ppow_server`
+
+# Todo
 
 - [x] start playing with Dream
 - [x] start playing with js_of_ocaml
@@ -28,25 +54,7 @@ in OCaml it looks an easy way to serialize OCaml values.
 - [x] add interaction between paddle and ball
 - [x] handle multiple connections
 - [x] add another paddle managed by others clients
-- [ ] implement ping pong
-
-# Install & run
-
-- Personally I work in a local switch: `opam switch create ./`
-  - my compiler is `ocaml-base-compiler.5.3.0`, also tested with `5.2.1`
-- install dune: `opam install dune`
-  - when developing you can install extra packages like *ocaml-lsp-server*,
-  *ocamlformat*, *utop*, etc...
-- ensure your environment is properly updated: `eval $(opam env)`
-- if you use a local switch everything should be already installed
-  - otherwise install dependencies: `opam install . --deps-only`
-- update your environment: `eval $(opam env)`
-- build ppow: `dune build`
-- run the server: `dune exec ppow_server` or `./_build/default/backend/server.exe`
-- start client: open the `index.html` in the browser
-- you can start another client by openning the `index.html` in another tab or another browser.
-- You can also install it: `dune install`
-- once installed in your switch you should be able to run: `ppow_server`
+- [ ] add rules to implement something that looks like ping pong
 
 # Changelog
 
