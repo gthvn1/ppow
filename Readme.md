@@ -1,4 +1,4 @@
-<img src="images/screenshot.png" alt="OCaml plays ping pong" />
+<img src="images/screenshot_two_clients.png" alt="OCaml plays ping pong" />
 
 # Intro
 
