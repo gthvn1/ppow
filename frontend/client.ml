@@ -5,6 +5,11 @@ module G = Game_types
 let doc = Dom_html.document
 let ball : G.ball ref = ref { G.x = 0.; y = 0.; radius = 0.; dx = 0.; dy = 0. }
 let paddles : G.paddle G.PMap.t ref = ref G.PMap.empty
+let paddle_colors = [ "red"; "blue"; "green"; "pink" ]
+
+let get_paddle_color (id : int) =
+  let i = id mod List.length paddle_colors in
+  Js.string (List.nth paddle_colors i)
 
 let create_title (str : string) =
   let h1 = Dom_html.createH1 doc in
@@ -48,8 +53,8 @@ let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
       (Js.float (float canvas##.width))
       (Js.float (float canvas##.height));
 
-    ctx##beginPath;
     (* Draw ball *)
+    ctx##beginPath;
     ctx##arc (Js.float !ball.x) (Js.float !ball.y) (Js.float !ball.radius)
       (Js.float 0.)
       (Js.float (2. *. Float.pi))
@@ -60,13 +65,17 @@ let animate (ctx : Dom_html.canvasRenderingContext2D Js.t)
     ctx##.strokeStyle := Js.string "black";
     ctx##stroke;
 
+    (* Draw paddles *)
     let paddle_lst = G.PMap.to_list !paddles in
     List.iter
-      (fun (_id, (paddle : G.paddle)) ->
+      (fun (id, (paddle : G.paddle)) ->
+        ctx##beginPath;
         ctx##rect (Js.float paddle.x) (Js.float paddle.y)
           (Js.float paddle.width) (Js.float paddle.height);
+        ctx##.strokeStyle := get_paddle_color id;
         ctx##stroke)
       paddle_lst;
+
     ctx##closePath;
 
     (* Request next animation frame *)
