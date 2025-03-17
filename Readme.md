@@ -7,14 +7,14 @@ The game is written in OCaml because we enjoy working with the language and we w
 skills.
 
 - Tech Stack:
-  
+
   - Backend: OCaml with [Dream](https://aantron.github.io/dream/)
   - Frontend: HTML5 Canvas + [js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)
     - Here are [some examples](https://github.com/ocsigen/js_of_ocaml/blob/master/examples)
   - Communication: [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket)
 
 - How It Works:
-  
+
   - A new paddle is created for each client that connects.
   - Clients can interact with the ball using its paddle (currently the only action available).
   - The frontend listens for keyboard events and sends actions to the backend.
